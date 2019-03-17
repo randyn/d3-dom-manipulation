@@ -21,8 +21,8 @@ const pipe = (...functions) =>
   );
 
 // Define different unique values we have
-const countries = data.map(sighting_data => sighting_data.country).unique();
-const states = data.map(sighting_data => sighting_data.state).unique();
+const countries = data.map(sighting_data => sighting_data.country.toUpperCase()).unique().sort();
+const states = data.map(sighting_data => sighting_data.state.toUpperCase()).unique().sort();
 
 // Data Filter functions
 const dateFilter = (date, tableData) =>
@@ -48,6 +48,14 @@ const domStateFilter = (data) => {
   state = d3.select('#state').property('value');
   return stateFilter(state, data)
 };
+
+const countryFilter = (country, tableData) => 
+  country == '' ? tableData : tableData.filter(sighting_data => sighting_data.country === country.toLowerCase());
+
+const domCountryFilter = (data) => {
+  country = d3.select('#country').property('value');
+  return countryFilter(country, data);
+}
 
 // Base Update DOM functions
 const appendTDAnd = (cell_text, row) => {
@@ -99,9 +107,18 @@ const initStates = () => {
     d3.select('#state').append('option').text(state)
   );
 }
+
+const initCountries = () => {
+  d3.select('#country').append('option').text('');
+  countries.forEach((country) =>
+    d3.select('#country').append('option').text(country)
+  );
+}
+
 const init = () => {
   appendTable(data);
   initStates();
+  initCountries();
 }
 
 
@@ -110,7 +127,8 @@ const handleFilterChange = () => {
   allFilters = pipe(
     domDateFilter,
     domCityFilter,
-    domStateFilter
+    domStateFilter,
+    domCountryFilter
   );
 
   filtered_data = allFilters(data);
