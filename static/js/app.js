@@ -1,13 +1,14 @@
 // from data.js
-const countries = data.map(sighting_data => sighting_data.country)
-                   .reduce((unique_countries, country) =>
-                     !(unique_countries.includes(country)) 
-                       ? unique_countries.concat(country)
-                       : unique_countries,
-                     []
-                   );
+const unique = (array) => 
+  array.reduce((unique_items, item) =>
+    !(unique_items.includes(item)) 
+      ? unique_items.concat(item)
+      : unique_items,
+    []
+  );
 
-
+// Extend array object to be able to call unique on them
+Array.prototype.unique = function() {return unique(this)};
 
 const identity = value => value;
 
@@ -18,6 +19,10 @@ const pipe = (...functions) =>
     (...args) => nextFunction(prevFunction(...args)),
     identity
   );
+
+// Define different unique values we have
+const countries = data.map(sighting_data => sighting_data.country).unique();
+const states = data.map(sighting_data => sighting_data.state).unique();
 
 // Data Filter functions
 const dateFilter = (date, tableData) =>
@@ -35,6 +40,14 @@ const domCityFilter = (data) => {
   city = d3.select('#city').property('value');
   return cityFilter(city, data);
 }
+
+const stateFilter = (state, tableData) =>
+  state == '' ? tableData : tableData.filter(sighting_data => sighting_data.state === state.toLowerCase());
+
+const domStateFilter = (data) => {
+  state = d3.select('#state').property('value');
+  return stateFilter(state, data)
+};
 
 // Base Update DOM functions
 const appendTDAnd = (cell_text, row) => {
@@ -79,8 +92,16 @@ const refreshTable = (data) => {
   appendTable(data);
 }
 
+
+const initStates = () => {
+  d3.select('#state').append('option').text('');
+  states.forEach((state) =>
+    d3.select('#state').append('option').text(state)
+  );
+}
 const init = () => {
   appendTable(data);
+  initStates();
 }
 
 
@@ -88,7 +109,8 @@ const handleFilterChange = () => {
   d3.event.preventDefault();
   allFilters = pipe(
     domDateFilter,
-    domCityFilter
+    domCityFilter,
+    domStateFilter
   );
 
   filtered_data = allFilters(data);
