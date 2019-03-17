@@ -21,8 +21,15 @@ const pipe = (...functions) =>
   );
 
 // Define different unique values we have
-const countries = data.map(sighting_data => sighting_data.country.toUpperCase()).unique().sort();
-const states = data.map(sighting_data => sighting_data.state.toUpperCase()).unique().sort();
+const countries = data.map(sighting_data => sighting_data.country.toUpperCase())
+                      .unique()
+                      .sort();
+const states = data.map(sighting_data => sighting_data.state.toUpperCase())
+                   .unique()
+                   .sort();
+const shapes = data.map(sighting_data => sighting_data.shape)
+                   .unique()
+                   .sort();
 
 // Data Filter functions
 const dateFilter = (date, tableData) =>
@@ -55,6 +62,14 @@ const countryFilter = (country, tableData) =>
 const domCountryFilter = (data) => {
   country = d3.select('#country').property('value');
   return countryFilter(country, data);
+}
+
+const shapeFilter = (shape, tableData) =>
+  shape == '' ? tableData : tableData.filter(sighting_data => sighting_data.shape === shape.toLowerCase());
+
+const domShapeFilter = (data) => {
+  shape = d3.select('#shape').property('value');
+  return shapeFilter(shape, data);
 }
 
 // Base Update DOM functions
@@ -115,10 +130,18 @@ const initCountries = () => {
   );
 }
 
+const initShapes = () => {
+  d3.select('#shape').append('option').text('');
+  shapes.forEach((shape) =>
+    d3.select('#shape').append('option').text(shape)
+  );
+}
+
 const init = () => {
   appendTable(data);
   initStates();
   initCountries();
+  initShapes();
 }
 
 
@@ -128,7 +151,8 @@ const handleFilterChange = () => {
     domDateFilter,
     domCityFilter,
     domStateFilter,
-    domCountryFilter
+    domCountryFilter,
+    domShapeFilter
   );
 
   filtered_data = allFilters(data);
