@@ -12,14 +12,14 @@ Array.prototype.unique = function() {return unique(this)};
 const identity = value => value;
 
 // Implementation of `flow` https://lodash.com/docs/4.17.11#flow
-// Helps with composing functions
+// FP version has a pipe alias. Helps with composing functions
 const pipe = (...functions) =>
   functions.reduce((prevFunction, nextFunction) =>
     (...args) => nextFunction(prevFunction(...args)),
     identity
   );
 
-// Define different unique values we have
+// Define different unique values we have. Too many cities, not gonna bother with those
 const countries = data.map(sighting_data => sighting_data.country.toUpperCase())
                       .unique()
                       .sort();
