@@ -1,4 +1,3 @@
-// from data.js
 const unique = (array) => 
   array.reduce((unique_items, item) =>
     !(unique_items.includes(item)) 
@@ -115,7 +114,7 @@ const refreshTable = (data) => {
   appendTable(data);
 }
 
-
+// Initialize page data and select values
 const initStates = () => {
   d3.select('#state').append('option').text('');
   states.forEach((state) =>
@@ -144,7 +143,7 @@ const init = () => {
   initShapes();
 }
 
-
+// Now put everything together
 const handleFilterChange = () => {
   d3.event.preventDefault();
   allFilters = pipe(
