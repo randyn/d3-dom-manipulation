@@ -20,26 +20,16 @@ const pipe = (...functions) =>
   );
 
 // Data Filter functions
-const dateFilter = (date, tableData) => {
-  if (typeof(tableData) == 'undefined') {
-    return (tableData) => dateFilter(date, tableData);
-  }
-
-  return date == '' ? tableData : tableData.filter(sighting_data => sighting_data.datetime == date);
-};
+const dateFilter = (date, tableData) =>
+  date == '' ? tableData : tableData.filter(sighting_data => sighting_data.datetime == date);
 
 const domDateFilter = (data) => {
   date = d3.select('#datetime').property('value');
   return dateFilter(date, data);
 }
 
-const cityFilter = (city, tableData) => {
-  if (typeof(tableData) == 'undefined') {
-    return (tableData) => cityFilter(city, tableData);
-  }
-
-  return city == '' ? tableData : tableData.filter(sighting_data => sighting_data.city === city.toLowerCase());
-}
+const cityFilter = (city, tableData) =>
+  city == '' ? tableData : tableData.filter(sighting_data => sighting_data.city === city.toLowerCase());
 
 const domCityFilter = (data) => {
   city = d3.select('#city').property('value');
