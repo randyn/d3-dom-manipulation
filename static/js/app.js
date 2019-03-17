@@ -1,3 +1,4 @@
+const capitalize = (string) => string[0].toUpperCase() + string.slice(1);
 const unique = (array) => 
   array.reduce((unique_items, item) =>
     !(unique_items.includes(item)) 
@@ -85,8 +86,8 @@ const appendSightingDataRow = (sighting_data, row) => {
   appendData = pipe(
     appendTDAnd(sighting_data.datetime),
     appendTDAnd(sighting_data.city),
-    appendTDAnd(sighting_data.state),
-    appendTDAnd(sighting_data.country),
+    appendTDAnd(sighting_data.state.toUpperCase()),
+    appendTDAnd(sighting_data.country.toUpperCase()),
     appendTDAnd(sighting_data.shape),
     appendTDAnd(sighting_data.durationMinutes),
     appendTDAnd(sighting_data.comments)
